@@ -1,0 +1,29 @@
+### Add message, write concern = 1
+POST http://localhost:7085/messages
+Content-Type: application/json
+
+{
+  "body": "Message 1",
+  "w": 1
+}
+
+### Add message, write concern = 2
+POST http://localhost:7085/messages
+Content-Type: application/json
+
+{
+  "body": "Message 2",
+  "w": 2
+}
+
+### Get messages from master node
+GET http://localhost:7085/messages
+Content-Type: application/json
+
+### Get messages from secondary-1 node
+GET http://localhost:7086/messages
+Accept: application/json
+
+### Get messages from secondary-2 node
+GET http://localhost:7087/messages
+Accept: application/json
