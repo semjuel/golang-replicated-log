@@ -68,8 +68,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		model.AddMessage(m)
 
-		sendMessageToSecondary(m.Text, ":9000")
-		sendMessageToSecondary(m.Text, ":9001")
+		for i := 1; i <= 2; i++ {
+			target := fmt.Sprintf("replicated-log-secondary-%d:800%d", i, i)
+			sendMessageToSecondary(m.Text, target)
+		}
 
 		w.WriteHeader(http.StatusCreated)
 		break
@@ -81,12 +83,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func sendMessageToSecondary(body string, port string) {
+func sendMessageToSecondary(body string, target string) {
 	// Run gRPC client.
-	log.Println("Start gRPC client")
+	log.Printf("Start gRPC client - %s \n", target)
 
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial(port, grpc.WithInsecure())
+	conn, err := grpc.Dial(target, grpc.WithInsecure())
 	if err != nil {
 		log.Printf("Did not connect: %s", err)
 	}
@@ -96,8 +98,8 @@ func sendMessageToSecondary(body string, port string) {
 
 	response, err := c.Send(context.Background(), &api.LogMessage{Body: body})
 	if err != nil {
-		log.Printf("Error when calling Send: %s", err)
+		log.Printf("Server: %s. Error when calling Send: %s", target, err)
 	}
 
-	log.Printf("Response from server: %s", response.Body)
+	log.Printf("Response from server %s: %s", target, response.Body)
 }
