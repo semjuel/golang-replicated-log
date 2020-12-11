@@ -10,8 +10,3 @@ message LogMessage {
 service LogMessageService {
   rpc Send(LogMessage) returns (LogMessage) {}
 }
-
-
-/*
-protoc -I src/basic/api -I${GOPATH}/src --go_out=plugins=grpc:src/basic/api src/basic/api/log.proto
-*/
