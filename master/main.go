@@ -12,7 +12,11 @@ import (
 	"replicated_log/basic/api"
 	"replicated_log/basic/model"
 	"replicated_log/basic/server"
+	"sync"
 )
+
+var iterations int
+var mutex = &sync.Mutex{}
 
 func main() {
 	err := godotenv.Load()
@@ -68,9 +72,20 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		model.AddMessage(m)
 
+		iterations = 1
 		for i := 1; i <= 2; i++ {
 			target := fmt.Sprintf("replicated-log-secondary-%d:800%d", i, i)
-			sendMessageToSecondary(m.Text, target)
+			go sendMessageToSecondary(m.Text, target)
+		}
+
+		concern := 1
+		if m.W > 1 {
+			concern = m.W
+		} else if concern > 3 {
+			concern = 3
+		}
+
+		for iterations < concern {
 		}
 
 		w.WriteHeader(http.StatusCreated)
@@ -100,6 +115,10 @@ func sendMessageToSecondary(body string, target string) {
 	if err != nil {
 		log.Printf("Server: %s. Error when calling Send: %s", target, err)
 	}
+
+	mutex.Lock()
+	iterations += 1
+	mutex.Unlock()
 
 	log.Printf("Response from server %s: %s", target, response.Body)
 }
