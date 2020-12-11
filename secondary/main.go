@@ -29,8 +29,8 @@ func main() {
 	routes := model.Routes{{Pattern: "/messages", Handler: handler}}
 	go server.Run(name, routes)
 
-	log.Println("Start gRPC server")
 	gRPCPort := os.Getenv("REPLICATED_LOG_GRPC_PORT")
+	log.Printf("Start gRPC server on port %s", gRPCPort)
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", gRPCPort))
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
