@@ -16,8 +16,6 @@ services:
       - 7085:7085
     networks:
       - internal
-    volumes:
-      - ./:/go/src/replicated_log
 
   replicated-log-secondary-1:
     build:
@@ -31,8 +29,6 @@ services:
       - 7086:7086
     networks:
       - internal
-    volumes:
-      - ./:/go/src/replicated_log
 
   replicated-log-secondary-2:
     build:
@@ -46,8 +42,6 @@ services:
       - 7087:7087
     networks:
       - internal
-    volumes:
-      - ./:/go/src/replicated_log
 
 networks:
   internal:
