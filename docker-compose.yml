@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  replicated-log-master:
+    build:
+      context: .
+      dockerfile: ./docker/master/Dockerfile
+    environment:
+      REPLICATED_LOG_NODE_NAME: Master
+      REPLICATED_LOG_HTTP_PORT: 7085
+      GRPC_GO_LOG_VERBOSITY_LEVEL: 99
+      GRPC_GO_LOG_SEVERITY_LEVEL: debug
+      GODEBUG: netdns=cgo
+      GRPC_VERBOSITY: debug
+    ports:
+      - 7085:7085
+    networks:
+      - internal
+    volumes:
+      - ./:/go/src/replicated_log
+
+  replicated-log-secondary-1:
+    build:
+      context: .
+      dockerfile: ./docker/secondary/Dockerfile
+    environment:
+      REPLICATED_LOG_NODE_NAME: Secondary-1
+      REPLICATED_LOG_HTTP_PORT: 7086
+      REPLICATED_LOG_GRPC_PORT: 8001
+    ports:
+      - 7086:7086
+    networks:
+      - internal
+    volumes:
+      - ./:/go/src/replicated_log
+
+  replicated-log-secondary-2:
+    build:
+      context: .
+      dockerfile: ./docker/secondary/Dockerfile
+    environment:
+      REPLICATED_LOG_NODE_NAME: Secondary-2
+      REPLICATED_LOG_HTTP_PORT: 7087
+      REPLICATED_LOG_GRPC_PORT: 8002
+    ports:
+      - 7087:7087
+    networks:
+      - internal
+    volumes:
+      - ./:/go/src/replicated_log
+
+networks:
+  internal:
