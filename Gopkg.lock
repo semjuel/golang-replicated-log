@@ -37,7 +37,7 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "c7110b5ffcbb9f2ac4de9fbd2600e37d42473a9a"
+  revision = "ac852fbbde11df194bfd5004603c7c8e117901f2"
 
 [[projects]]
   branch = "master"
@@ -48,7 +48,7 @@
     "unix",
   ]
   pruneopts = "UT"
-  revision = "ed752295db8857b3a7f36c3f57e38509cadff471"
+  revision = "8ad439b19e0fb2ded35375e495090c1334011eb9"
 
 [[projects]]
   digest = "1:a45009ae1e0da0b589cd5da9f30770041573e61f2f79fb3e86aa3790d5c495c4"
@@ -81,7 +81,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "06b3db80844671cc7ff39f70718ddc6f943bac08"
+  revision = "e3217bee35cc05224a14d950c85cb05b61109ded"
 
 [[projects]]
   digest = "1:3f2a827dee58351f7f44ef630b7759b5869934cd99b97f64645536a982e9ff4c"
