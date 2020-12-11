@@ -21,6 +21,6 @@
   ```
   where `body` is string and contains message text and `w` is integer 
   represents write concern
-- to get a list of message: make `GET` request to one of available 
+- to get a list of messages: make `GET` request to one of available 
   nodes (master or secondary) to the `/messages` url
 - see requests examples in the `api-requests.http` file
