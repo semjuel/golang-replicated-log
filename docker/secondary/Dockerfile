@@ -18,6 +18,7 @@ RUN mkdir -p $GOPATH/src/${SERVICE_PATH}
 
 # COPY source files
 COPY . $GOPATH/src/${SERVICE_PATH}
+COPY ./.env.example $GOPATH/src/${SERVICE_PATH}/.env
 
 WORKDIR $GOPATH/src/${SERVICE_PATH}
 
