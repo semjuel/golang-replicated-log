@@ -12,11 +12,11 @@ import (
 	"replicated_log/basic/api"
 	"replicated_log/basic/model"
 	"replicated_log/basic/server"
-	"sync"
+	"sync/atomic"
 )
 
-var iterations int
-var mutex = &sync.Mutex{}
+var iterations int32
+var concern int32
 
 func main() {
 	err := godotenv.Load()
@@ -78,14 +78,18 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			go sendMessageToSecondary(m.Text, target)
 		}
 
-		concern := 1
+		concern = 1
 		if m.W > 1 {
 			concern = m.W
 		} else if concern > 3 {
 			concern = 3
 		}
 
-		for iterations < concern {
+		for {
+			state := atomic.LoadInt32(&iterations)
+			if state >= concern {
+				break
+			}
 		}
 
 		w.WriteHeader(http.StatusCreated)
@@ -106,6 +110,7 @@ func sendMessageToSecondary(body string, target string) {
 	conn, err := grpc.Dial(target, grpc.WithInsecure())
 	if err != nil {
 		log.Printf("Did not connect: %s", err)
+		return
 	}
 	defer conn.Close()
 
@@ -114,11 +119,10 @@ func sendMessageToSecondary(body string, target string) {
 	response, err := c.Send(context.Background(), &api.LogMessage{Body: body})
 	if err != nil {
 		log.Printf("Server: %s. Error when calling Send: %s", target, err)
+		return
 	}
 
-	mutex.Lock()
-	iterations += 1
-	mutex.Unlock()
+	atomic.AddInt32(&iterations, 1)
 
 	log.Printf("Response from server %s: %s", target, response.Body)
 }

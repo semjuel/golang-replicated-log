@@ -4,7 +4,7 @@ var messages []Message
 
 type Message struct {
 	Text string `json:"body"`
-	W    int    `json:"w"`
+	W    int32  `json:"w"`
 }
 
 func AddMessage(message Message) {
