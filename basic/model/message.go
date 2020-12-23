@@ -1,6 +1,7 @@
 package model
 
 import (
+	"log"
 	"sort"
 	"sync/atomic"
 )
@@ -57,6 +58,7 @@ func GetMessages() Messages {
 	}
 
 	sort.Sort(messages)
+	log.Printf("Messages: %v", messages)
 	first := messages[0]
 
 	if first.intId() != 0 {
