@@ -2,11 +2,12 @@ package http
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"replicated_log/basic/model"
 	"replicated_log/master/grpc"
+	"replicated_log/master/service"
+	"replicated_log/master/utils"
 	"sync/atomic"
 )
 
@@ -51,9 +52,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		model.AddMessage(message)
 
 		var iterations int32 = 1
-		for i := 1; i <= 2; i++ {
-			target := fmt.Sprintf("replicated-log-secondary-%d:800%d", i, i)
-			go grpc.Replicate(message, target, &iterations)
+		for _, v := range service.GetSecondaries() {
+			go grpc.Replicate(message, v.GRPS, &iterations)
 		}
 
 		concern = 1
