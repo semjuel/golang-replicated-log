@@ -24,3 +24,8 @@
 - to get a list of messages: make `GET` request to one of available 
   nodes (master or secondary) to the `/messages` url
 - see requests examples in the `api-requests.http` file
+
+## Contributors
+- Ihor Semeniuk
+- Pavlo Sliusar
+- Dmytro Ilchuk
