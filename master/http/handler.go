@@ -32,9 +32,16 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		break
 
 	case http.MethodPost:
+		err := utils.HasQuorum()
+		if err != nil {
+			log.Printf("No quorum... \n")
+			http.Error(w, "Bad request. No quorum.", http.StatusBadRequest)
+			return
+		}
+
 		decoder := json.NewDecoder(r.Body)
 		var m model.RequestMessage
-		err := decoder.Decode(&m)
+		err = decoder.Decode(&m)
 		if err != nil {
 			log.Printf("Decode error %s \n", err)
 			http.Error(w, "Bad request", http.StatusBadRequest)
